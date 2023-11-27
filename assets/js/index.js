@@ -57,16 +57,16 @@ const component={
             li.appendChild(h3);
             li.appendChild(del);
             li.appendChild(p);
-
+            
             //add carts
             addCardBtn.addEventListener('click',async e=>{
                 e.preventDefault();
                 const addCarId=e.target.getAttribute("data-id");
-                
+                addCardBtn.offsetParent.parentElement.previousElementSibling.previousElementSibling.classList.remove('d-none');
                 await ajax.addShoppingCar(addCarId,1);
-                //location.href=indexHtml;
                 
                 this.data=await ajax.getShoppingCar();
+                addCardBtn.offsetParent.parentElement.previousElementSibling.previousElementSibling.classList.add('d-none');
                 if(this.data.length===0){
                     shoppingCartTable.classList.add('d-none');
                 }else if(this.data.length!==0){
@@ -138,19 +138,22 @@ const component={
             discardBtn.textContent='clear';
             discardBtn.setAttribute('data-id',item.id)
             td.appendChild(discardBtn);
-
+            
             input.addEventListener('keyup',async e=>{
+                shoppingCartTable.previousElementSibling.classList.remove('d-none');
                 if(e.target.value<=1){
                     e.target.value=1
                 }else{
                     e.target.value=e.target.value.replace(/[^\d.]/g,' ');
                 }
                 const cartId=e.target.getAttribute('data-id');
-                console.log(cartId);
+                
                 this.data=await ajax.patchShoppingCar(cartId,Number(e.target.value));
                 await this.renderShoppingCart();
+                shoppingCartTable.previousElementSibling.classList.add('d-none');
             })
             input.addEventListener('change',async e=>{
+                shoppingCartTable.previousElementSibling.classList.remove('d-none');
                 if(e.target.value<=1){
                     e.target.value=1
                 }else{
@@ -159,15 +162,17 @@ const component={
                 const cartId=e.target.getAttribute('data-id');
                 this.data=await ajax.patchShoppingCar(cartId,Number(e.target.value));
                 await this.renderShoppingCart();
+                shoppingCartTable.previousElementSibling.classList.add('d-none');
             })
-
+            
             discardBtn.addEventListener('click',async e=>{
                 e.preventDefault();
                 const cartId=e.target.getAttribute("data-id");
-
+                discardBtn.parentElement.parentElement.parentElement.previousElementSibling.classList.remove('d-none');
                 await ajax.deleteShoppingCarById(cartId);
                 
                 this.data=await ajax.getShoppingCar();
+                discardBtn.parentElement.parentElement.parentElement.previousElementSibling.classList.add('d-none');
                 if(this.data.length===0){
                     shoppingCartTable.classList.add('d-none');
                 }else if(this.data.length!==0){
@@ -178,38 +183,41 @@ const component={
 
             })
         });
-        const tr=document.createElement('tr');
-        shoppingCartTable.appendChild(tr);
+        if(this.data.length!==0){
+            const tr=document.createElement('tr');
+            shoppingCartTable.appendChild(tr);
 
-        let td=document.createElement('td');
-        tr.appendChild(td);
-        const discardAllBtn=document.createElement('a');
-        discardAllBtn.href='#';
-        discardAllBtn.className='discardAllBtn';
-        discardAllBtn.textContent='刪除所有品項';
-        td.appendChild(discardAllBtn);
+            let td=document.createElement('td');
+            tr.appendChild(td);
+            const discardAllBtn=document.createElement('a');
+            discardAllBtn.href='#';
+            discardAllBtn.className='discardAllBtn';
+            discardAllBtn.textContent='刪除所有品項';
+            td.appendChild(discardAllBtn);
 
-        td=document.createElement('td');
-        tr.appendChild(td);
-        td=document.createElement('td');
-        tr.appendChild(td);
+            td=document.createElement('td');
+            tr.appendChild(td);
+            td=document.createElement('td');
+            tr.appendChild(td);
 
-        td=document.createElement('td');
-        tr.appendChild(td);
-        const p=document.createElement('p');
-        p.textContent='總金額';
-        td.appendChild(p);
+            td=document.createElement('td');
+            tr.appendChild(td);
+            const p=document.createElement('p');
+            p.textContent='總金額';
+            td.appendChild(p);
 
-        td=document.createElement('td');
-        td.textContent=`NT$${amount}`;
-        tr.appendChild(td);
-
-        discardAllBtn.addEventListener('click',async e=>{
-            e.preventDefault();
-            await ajax.deleteAllShoppingCar();
-
-            location.href=indexHtml;
-        })
+            td=document.createElement('td');
+            td.textContent=`NT$${amount}`;
+            tr.appendChild(td);
+            
+            discardAllBtn.addEventListener('click',async e=>{
+                e.preventDefault();
+                discardAllBtn.parentElement.parentElement.parentElement.previousElementSibling.classList.remove('d-none');
+                this.data=await ajax.deleteAllShoppingCar();
+                discardAllBtn.parentElement.parentElement.parentElement.previousElementSibling.classList.add('d-none');
+                this.renderShoppingCart();
+            });
+        }
     },
     async postOrder(obj){
         await ajax.postOrder(obj);
@@ -370,11 +378,11 @@ orderInfoBtn.addEventListener('click',async e=>{
         obj.data.user.email=customerEmail.value;
         obj.data.user.address=customerAddress.value;
         obj.data.user.payment=tradeWay.value;
-
+        orderInfoBtn.form.previousElementSibling.previousElementSibling.classList.remove('d-none');
         await component.postOrder(obj);
+        orderInfoBtn.form.previousElementSibling.previousElementSibling.classList.add('d-none');
         location.href=indexHtml;
     }
 });
 
 
-orderInfoBtn.form.previousElementSibling.previousElementSibling.classList.remove('d-none')
