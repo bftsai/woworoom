@@ -32,6 +32,18 @@ export const ajax={
             console.log(err);
         }
     },
+    async patchShoppingCar(id,quantity){
+        try {
+            let obj={};
+            obj.data={};
+            obj.data.id=id;
+            obj.data.quantity=quantity;
+            const result=await axios.patch(`${apiCustomerUrl}carts`,obj);
+            return result.data.carts;
+        } catch (err) {
+            console.log(err);
+        }
+    },
     async deleteShoppingCarById(id){
         try {
             const result=await axios.delete(`${apiCustomerUrl}carts/${id}`);

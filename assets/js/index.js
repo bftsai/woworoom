@@ -70,7 +70,6 @@ const component={
                 if(this.data.length===0){
                     shoppingCartTable.classList.add('d-none');
                 }else if(this.data.length!==0){
-                    console.log(this.data);
                     shoppingCartTable.classList.remove('d-none');
                     this.renderShoppingCart();
                 }
@@ -117,8 +116,13 @@ const component={
             tr.appendChild(td);
 
             td=document.createElement('td');
-            td.textContent=item.quantity;
             tr.appendChild(td);
+            const input=document.createElement('input');
+            input.value=item.quantity;
+            input.type='number';
+            input.setAttribute('data-id',item.id);
+            td.appendChild(input);
+            
 
             td=document.createElement('td');
             td.textContent=`NT$${item.product.price*item.quantity}`;
@@ -134,6 +138,28 @@ const component={
             discardBtn.textContent='clear';
             discardBtn.setAttribute('data-id',item.id)
             td.appendChild(discardBtn);
+
+            input.addEventListener('keyup',async e=>{
+                if(e.target.value<=1){
+                    e.target.value=1
+                }else{
+                    e.target.value=e.target.value.replace(/[^\d.]/g,' ');
+                }
+                const cartId=e.target.getAttribute('data-id');
+                console.log(cartId);
+                this.data=await ajax.patchShoppingCar(cartId,Number(e.target.value));
+                await this.renderShoppingCart();
+            })
+            input.addEventListener('change',async e=>{
+                if(e.target.value<=1){
+                    e.target.value=1
+                }else{
+                    input.value=e.target.value.replace(/[^\d.]/g,' ');
+                }
+                const cartId=e.target.getAttribute('data-id');
+                this.data=await ajax.patchShoppingCar(cartId,Number(e.target.value));
+                await this.renderShoppingCart();
+            })
 
             discardBtn.addEventListener('click',async e=>{
                 e.preventDefault();
@@ -349,3 +375,6 @@ orderInfoBtn.addEventListener('click',async e=>{
         location.href=indexHtml;
     }
 });
+
+
+orderInfoBtn.form.previousElementSibling.previousElementSibling.classList.remove('d-none')

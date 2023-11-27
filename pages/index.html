@@ -16,9 +16,6 @@
     <%- include('./layout/header'); -%>
 
     <body>
-      <div class="spinner-border text-primary position-absolute d-none" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
       <nav class="topBar">
           <div class="wrap">
               <h1><a href="#" class="logo">WOWOROOM</a></h1>
@@ -358,7 +355,10 @@
       </section>
       <section class="shoppingCart">
           <h3 class="section-title">我的購物車</h3>
-          <div class="overflowWrap">
+          <div class="overflowWrap position-relative">
+              <div class="spinner-border text-primary position-absolute d-none" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
               <table class="shoppingCart-table">
                   <tr>
                       <th width="40%">品項</th>
@@ -397,7 +397,10 @@
               </table>
           </div>
       </section>
-      <section class="orderInfo wrap" id="orderInfo">
+      <section class="orderInfo wrap position-relative" id="orderInfo">
+          <div class="spinner-border text-primary position-absolute d-none" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
           <h3 class="section-title">填寫預訂資料</h3>
           <form action="" class="orderInfo-form">
               <div class="orderInfo-formGroup">
