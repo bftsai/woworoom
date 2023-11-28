@@ -808,3 +808,11 @@ body {
   display: none;
 }
 /*# sourceMappingURL=all.css.map */
+.chartProduct,.chartItem{
+  transition: all 0.4s ease;
+}
+.msoHover{
+  &:hover{
+    cursor: pointer;
+  }
+}

@@ -100,7 +100,7 @@ export const ajax={
                     "authorization": uId
                 }
             });
-            console.log(result);
+            return result.data.orders;
         } catch (err) {
             console.log(err);
         }

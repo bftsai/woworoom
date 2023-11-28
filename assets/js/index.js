@@ -1,12 +1,12 @@
 import { ajax } from "./config.js";
 import { checkOrder,validation } from "./validation.js";
-const indexHtml='http://localhost:5173/woworoom/pages/index.html';
+// const indexHtml='https://bftsai.github.io/woworoom/index.html';
+// const indexHtml='http://localhost:5173/woworoom/pages/index.html';
 //product area
 
 const productWrap=document.querySelector('.productWrap');
 //shopping car area
 const shoppingCartTable=document.querySelector('.shoppingCart-table');
-
 
 const component={
     data:[],

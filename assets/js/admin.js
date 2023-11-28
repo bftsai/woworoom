@@ -5,11 +5,11 @@ const component={
     data:[],
     async init(){
         this.data=await ajax.getAdminOrders();
-        //console.log(this.data);
         if(this.data.length!==0){
             this.renderOrderPage();
         }else{
             discardAllBtn.setAttribute('disabled','');
+            chartSummaryTable.classList.add('d-none');
         }
     },
     renderOrderPage(){
@@ -80,20 +80,19 @@ const component={
                 td.appendChild(delSingleOrderBtn);
 
                 delSingleOrderBtn.addEventListener('click',async e=>{
+                    tbody.parentElement.parentElement.previousElementSibling.previousElementSibling.classList.remove('d-none');
                     const orderId=e.target.getAttribute('data-id');
                     await this.deleteOrderById(orderId);
                     this.data=await ajax.getAdminOrders();
-                    if(this.data.length===0){
-                        discardAllBtn.setAttribute('disabled','');
-                        
-                    }
                     this.renderOrderPage();
+                    tbody.parentElement.parentElement.previousElementSibling.previousElementSibling.classList.add('d-none');
                 })
             })
         });
         
         this.renderItemC3(countItemObj);
         this.renderProductC3(countProductObj);
+        chartSummaryTable.classList.remove('d-none');
     },
     renderItemC3(obj){
         const newArr=[];
@@ -160,20 +159,47 @@ const component={
         }
     },
     async deleteAllOrders(){
-        await ajax.deleteAllOrders();
-        this.data=await ajax.getAdminOrders();
-        if(this.data.length===0){
-            discardAllBtn.setAttribute('disabled','');
+        if(this.data.length!==0){
+            discardAllBtn.previousElementSibling.classList.remove('d-none');
+            this.data=await ajax.deleteAllOrders();
+            discardAllBtn.previousElementSibling.classList.add('d-none');
+            this.renderOrderPage();
+        }else{
+            console.log(0);
         }
-        this.renderOrderPage();
     }
 };
-
+const chartSummaryTable=document.querySelector('.chartSummaryTable');
 const discardAllBtn=document.querySelector('.discardAllBtn');
 const orderPageTable=document.querySelector('.orderPage-table');
 const tbody=document.createElement('tbody');
 orderPageTable.appendChild(tbody);
 component.init();
 discardAllBtn.addEventListener('click',e=>{
+    e.preventDefault();
     component.deleteAllOrders();
+});
+
+//carousel
+const msoLeft=document.querySelector('.mso-left');
+const msoRight=document.querySelector('.mso-right');
+const chartProduct=document.querySelector('.chartProduct');
+const chartItem=document.querySelector('.chartItem');
+msoLeft.addEventListener('click',e=>{
+    chartProduct.classList.add('translateX-start-100');
+    chartItem.classList.add('translateX-start-100');
+    msoLeft.classList.add('text-secondary');
+    msoLeft.classList.remove('msoHover');
+    msoRight.classList.remove('text-secondary');
+    msoRight.classList.add('msoHover');
+});
+msoRight.addEventListener('click',e=>{
+    if(chartProduct.className.includes('translateX-start-100')){
+        chartItem.classList.remove('translateX-start-100');
+        chartProduct.classList.remove('translateX-start-100');
+        msoRight.classList.add('text-secondary');
+        msoRight.classList.remove('msoHover');
+        msoLeft.classList.remove('text-secondary');
+        msoLeft.classList.add('msoHover');
+    }
 });
