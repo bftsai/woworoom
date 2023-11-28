@@ -808,11 +808,33 @@ body {
   display: none;
 }
 /*# sourceMappingURL=all.css.map */
+.mso-left{
+  left: 30%;
+}
+.mso-right{
+  right: 30%;
+}
 .chartProduct,.chartItem{
   transition: all 0.4s ease;
 }
-.msoHover{
-  &:hover{
-    cursor: pointer;
+@include md{
+  .mso-left{
+    left: 23%;
+  }
+  .mso-right{
+    right: 23%;
+  }
+}
+@include lg{
+  .mso-left{
+    left: 15%;
+  }
+  .mso-right{
+    right: 15%;
+  }
+  .msoHover{
+    &:hover{
+      cursor: pointer;
+    }
   }
 }
